@@ -1,7 +1,10 @@
 package org.example.business.model;
 
+import lombok.Getter;
+import lombok.Setter;
 import org.example.persistence.annotations.Id;
 
+@Getter @Setter
 @Entity
 @Table(name = "students")
 public class Student {
@@ -14,25 +17,6 @@ public class Student {
 
 
     public Student(String firstName) {
-        this.firstName = firstName;
-    }
-
-    private Student() {
-    }
-
-    public Long getId() {
-        return id;
-    }
-
-    public void setId(Long id) {
-        this.id = id;
-    }
-
-    public String getFirstName() {
-        return firstName;
-    }
-
-    public void setFirstName(String firstName) {
         this.firstName = firstName;
     }
 
