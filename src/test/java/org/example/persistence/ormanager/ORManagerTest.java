@@ -9,7 +9,6 @@ import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
-import javax.sql.DataSource;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.SQLException;
@@ -29,11 +28,11 @@ class ORManagerTest {
     static Source source;
     static Connection conn;
     static Table table;
-    DataSource dataSource;
     Student student;
 
     @BeforeAll
     static void setUp() throws SQLException {
+//        conn = DataSource.getConnection();
         conn = DriverManager.getConnection(DB_URL);
         conn.prepareStatement(STUDENTS_TABLE).execute();
         source = new Source("jdbc:h2:mem:test", "", "");
@@ -48,10 +47,12 @@ class ORManagerTest {
     @BeforeEach
     void init() {
         student = new Student("Bob");
+        log.atDebug().log("{}\n", student);
     }
 
     @Test
     void tableCreation() {
         output(table).toConsole();
     }
+
 }
