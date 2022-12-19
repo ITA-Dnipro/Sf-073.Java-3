@@ -6,7 +6,6 @@ import org.assertj.db.type.Table;
 import org.example.domain.model.Student;
 import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.BeforeAll;
-import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
 import java.sql.Connection;
@@ -14,6 +13,7 @@ import java.sql.DriverManager;
 import java.sql.PreparedStatement;
 import java.sql.SQLException;
 
+import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.db.output.Outputs.output;
 
 @Slf4j
@@ -31,6 +31,7 @@ class ORManagerTest {
     private static final String DB_URL = "jdbc:h2:mem:test";
     static Source source;
     static Connection conn;
+    static PreparedStatement stmt;
     static Table table;
     static Student student1;
 
@@ -47,30 +48,31 @@ class ORManagerTest {
     @AfterAll
     static void close() throws SQLException {
         conn.close();
+        stmt.close();
     }
 
     @Test
-    void saveToDB() {
-        try (PreparedStatement stmt = conn.prepareStatement(SQL_ADD_ONE)) {
-            Student st2 = new Student("Ani");
-            Student st3 = new Student("Dale");
-            Student st4 = new Student("Laura");
-            Student st5 = new Student("Shelly");
+    void saveToDB() throws SQLException {
+        stmt = conn.prepareStatement(SQL_ADD_ONE);
+        Student st2 = new Student("Ani");
+        Student st3 = new Student("Dale");
+        Student st4 = new Student("Laura");
+        Student st5 = new Student("Shelly");
 
-            stmt.setString(1, student1.getFirstName());
-            stmt.executeUpdate();
-            stmt.setString(1, st2.getFirstName());
-            stmt.executeUpdate();
-            stmt.setString(1, st3.getFirstName());
-            stmt.executeUpdate();
-            stmt.setString(1, st4.getFirstName());
-            stmt.executeUpdate();
-            stmt.setString(1, st5.getFirstName());
-            stmt.executeUpdate();
-            output(table).toConsole();
-        } catch (SQLException e) {
-            e.printStackTrace();
-        }
+        stmt.setString(1, student1.getFirstName());
+        stmt.executeUpdate();
+        stmt.setString(1, st2.getFirstName());
+        stmt.executeUpdate();
+        stmt.setString(1, st3.getFirstName());
+        stmt.executeUpdate();
+        stmt.setString(1, st4.getFirstName());
+        stmt.executeUpdate();
+        stmt.setString(1, st5.getFirstName());
+        stmt.executeUpdate();
+
+//        assertThat(table);
+
+        output(table).toConsole();
     }
 
 }
