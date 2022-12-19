@@ -10,8 +10,9 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
 import javax.sql.DataSource;
-
-import java.sql.*;
+import java.sql.Connection;
+import java.sql.DriverManager;
+import java.sql.SQLException;
 
 import static org.assertj.db.output.Outputs.output;
 
@@ -24,17 +25,24 @@ class ORManagerTest {
             first_name VARCHAR(30) NOT NULL
             )
             """;
-    DataSource dataSource;
+    private static final String DB_URL = "jdbc:h2:mem:test";
     static Source source;
     static Connection conn;
+    static Table table;
+    DataSource dataSource;
     Student student;
-    private static final String DB_URL = "jdbc:h2:mem:test";
 
     @BeforeAll
     static void setUp() throws SQLException {
         conn = DriverManager.getConnection(DB_URL);
-        conn.prepareStatement(STUDENTS_TABLE).executeUpdate();
+        conn.prepareStatement(STUDENTS_TABLE).execute();
         source = new Source("jdbc:h2:mem:test", "", "");
+        table = new Table(source, "students");
+    }
+
+    @AfterAll
+    static void close() throws SQLException {
+        conn.close();
     }
 
     @BeforeEach
@@ -43,13 +51,7 @@ class ORManagerTest {
     }
 
     @Test
-    void DBTesting() {
-        Table table = new Table(source, "students");
+    void tableCreation() {
         output(table).toConsole();
-    }
-
-    @AfterAll
-    static void close() throws SQLException {
-        conn.close();
     }
 }
