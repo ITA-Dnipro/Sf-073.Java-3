@@ -8,6 +8,7 @@ import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 
+import java.nio.file.Path;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.PreparedStatement;
@@ -33,22 +34,31 @@ class ORManagerTest {
     static Connection conn;
     static PreparedStatement stmt;
     static Table table;
-    static Student student1;
+    static Student student;
+    static Path path;
 
     @BeforeAll
     static void setUp() throws SQLException {
 //        conn = DataSource.getConnection();
         conn = DriverManager.getConnection(DB_URL);
         conn.prepareStatement(STUDENTS_TABLE).execute();
-        source = new Source("jdbc:h2:mem:test", "", "");
+        source = new Source("jdbc:h2:mem:test;DB_CLOSE_DELAY=-1", "", "");
         table = new Table(source, "students");
-        student1 = new Student("Bob");
+        student = new Student("Bob");
+        path = Path.of("db/properties/h2.properties");
     }
 
     @AfterAll
     static void close() throws SQLException {
         conn.close();
-        stmt.close();
+        if (stmt != null) {
+            stmt.close();
+        }
+    }
+
+    @Test
+    void DoesFileExist() {
+        assertThat(path).exists();
     }
 
     @Test
@@ -57,14 +67,14 @@ class ORManagerTest {
     }
 
     @Test
-    void saveToDB() throws SQLException {
+    void save() throws SQLException {
         stmt = conn.prepareStatement(SQL_ADD_ONE);
         Student st2 = new Student("Ani");
         Student st3 = new Student("Dale");
         Student st4 = new Student("Laura");
         Student st5 = new Student("Shelly");
 
-        stmt.setString(1, student1.getFirstName());
+        stmt.setString(1, student.getFirstName());
         stmt.executeUpdate();
         stmt.setString(1, st2.getFirstName());
         stmt.executeUpdate();
@@ -75,9 +85,23 @@ class ORManagerTest {
         stmt.setString(1, st5.getFirstName());
         stmt.executeUpdate();
 
-//        assertThat(table);
+        assertThat(table);
 
         output(table).toConsole();
+    }
+
+    @Test
+    void CheckIfIdIsSet() {
+        assertThat(student.getId()).as("User \"%s\" has no ID set yet", student.getFirstName()).isNull();
+    }
+
+    @Test
+    void ComparingObjectsFieldByField() {
+        Student student2 = new Student("Bob");
+        assertThat(student).usingRecursiveComparison().isEqualTo(student2);
+
+        //checking that the two objects aren't equal
+        log.atDebug().log("{}", student.equals(student2));
     }
 
 }
