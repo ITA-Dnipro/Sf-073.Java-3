@@ -52,6 +52,11 @@ class ORManagerTest {
     }
 
     @Test
+    void register() {
+
+    }
+
+    @Test
     void saveToDB() throws SQLException {
         stmt = conn.prepareStatement(SQL_ADD_ONE);
         Student st2 = new Student("Ani");
