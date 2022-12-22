@@ -6,18 +6,22 @@ import org.assertj.db.type.Table;
 import org.example.domain.model.Student;
 import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.BeforeAll;
+import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
+import org.mockito.junit.jupiter.MockitoExtension;
 
 import java.nio.file.Path;
 import java.sql.Connection;
-import java.sql.DriverManager;
 import java.sql.PreparedStatement;
 import java.sql.SQLException;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.db.api.Assertions.assertThat;
 import static org.assertj.db.output.Outputs.output;
 
 @Slf4j
+@ExtendWith(MockitoExtension.class)
 class ORManagerTest {
     //language=H2
     private static final String STUDENTS_TABLE = """
@@ -29,21 +33,19 @@ class ORManagerTest {
             """;
     //language=H2
     private static final String SQL_ADD_ONE = "INSERT INTO students (first_name) VALUES(?)";
-    private static final String DB_URL = "jdbc:h2:mem:test";
-    static Source source;
     static Connection conn;
     static PreparedStatement stmt;
+    static Source source;
     static Table table;
     static Student student;
     static Path path;
 
     @BeforeAll
     static void setUp() throws SQLException {
-//        conn = DataSource.getConnection();
-        conn = DriverManager.getConnection(DB_URL);
+        conn = org.example.persistence.ormanager.DataSource.getConnection();
         conn.prepareStatement(STUDENTS_TABLE).execute();
+
         source = new Source("jdbc:h2:mem:test;DB_CLOSE_DELAY=-1", "", "");
-        table = new Table(source, "students");
         student = new Student("Bob");
         path = Path.of("db/properties/h2.properties");
     }
@@ -62,11 +64,7 @@ class ORManagerTest {
     }
 
     @Test
-    void register() {
-
-    }
-
-    @Test
+    @DisplayName("try saving to database")
     void save() throws SQLException {
         stmt = conn.prepareStatement(SQL_ADD_ONE);
         Student st2 = new Student("Ani");
@@ -84,6 +82,10 @@ class ORManagerTest {
         stmt.executeUpdate();
         stmt.setString(1, st5.getFirstName());
         stmt.executeUpdate();
+
+        table = new Table(source, "students", new String[]{"id", "first_name"}, null);
+//        - choose the order of the Row:
+//        table = new Table(source, "students", new Table.Order[]{Table.Order.asc("first_name")});
 
         assertThat(table);
 
