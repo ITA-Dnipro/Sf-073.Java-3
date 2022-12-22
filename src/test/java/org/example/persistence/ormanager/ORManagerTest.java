@@ -105,10 +105,9 @@ class ORManagerTest {
     @Test
     void ComparingObjectsFieldByField() {
         Student student2 = new Student("Bob");
-        assertThat(student).usingRecursiveComparison().isEqualTo(student2);
 
-        //checking that the two objects aren't equal
-        log.atDebug().log("{}", student.equals(student2));
+        assertThat(student).usingRecursiveComparison().isEqualTo(student2);
+        assertThat(student).isNotEqualTo(student2);
     }
 
 }
