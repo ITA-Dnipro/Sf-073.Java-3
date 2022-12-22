@@ -3,6 +3,7 @@ package org.example.persistence.ormanager;
 import lombok.extern.slf4j.Slf4j;
 import org.assertj.db.type.Source;
 import org.assertj.db.type.Table;
+import org.assertj.db.type.ValueType;
 import org.example.domain.model.Student;
 import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.BeforeAll;
@@ -87,7 +88,11 @@ class ORManagerTest {
 //        - choose the order of the Row:
 //        table = new Table(source, "students", new Table.Order[]{Table.Order.asc("first_name")});
 
-        assertThat(table);
+        assertThat(table).row(0)
+                .value().isEqualTo(1L)
+                .value().isEqualTo("Bob");
+
+        assertThat(table).column("first_name").isOfType(ValueType.TEXT, true);
 
         output(table).toConsole();
     }
