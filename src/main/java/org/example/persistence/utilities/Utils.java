@@ -65,8 +65,8 @@ public class Utils {
             return dataSource.getConnection();
         } catch (NullPointerException e) {
             log.error("Need to initialize ORManager first to set the data source.");
-            throw new RuntimeException(e);
         }
+        return null;
     }
 
     public static ORManager withDataSource(DataSource dataSource) {
