@@ -53,10 +53,14 @@ public class ORManagerImpl implements ORManager {
     @Override
     public Connection getConnection() {
         try {
-            return this.dataSource.getConnection();
+            return getDataSource().getConnection();
         } catch (SQLException e) {
             throw new RuntimeException(e);
         }
+    }
+
+    private DataSource getDataSource() {
+        return dataSource;
     }
 
 }

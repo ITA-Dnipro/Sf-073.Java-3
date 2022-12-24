@@ -44,9 +44,13 @@ public class Utils {
         config.setJdbcUrl(url);
         config.setUsername(user);
         config.setPassword(password);
-        config.addDataSourceProperty("cachePrepStmts", "true");
-        config.addDataSourceProperty("prepStmtCacheSize", "250");
-        config.addDataSourceProperty("prepStmtCacheSqlLimit", "2048");
+
+//        HikariDataSource dataSource = new HikariDataSource();
+//        dataSource.setJdbcUrl(url);
+//        dataSource.setUsername(user);
+//        dataSource.setPassword(password);
+//        return dataSource;
+
         return new HikariDataSource(config);
     }
 

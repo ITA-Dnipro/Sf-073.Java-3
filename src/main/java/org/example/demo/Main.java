@@ -3,7 +3,6 @@ package org.example.demo;
 import org.example.persistence.ormanager.ORManager;
 import org.example.persistence.utilities.Utils;
 
-import java.nio.file.Path;
 import java.sql.SQLException;
 
 public class Main {
