@@ -13,7 +13,6 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.junit.jupiter.MockitoExtension;
 
-import java.nio.file.Path;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.SQLException;
@@ -66,7 +65,7 @@ class ORManagerTest {
 
     @Test
     @DisplayName("try saving to database")
-    void SaveToDBAndSeeResultWithOutputToConsole() throws SQLException {
+    void SaveToDBAndSeeTheResultWithOutputToConsole() throws SQLException {
         stmt = conn.prepareStatement(SQL_ADD_ONE);
         Student st2 = new Student("Ani");
         Student st3 = new Student("Dale");

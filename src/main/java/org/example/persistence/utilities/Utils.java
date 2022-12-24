@@ -48,8 +48,12 @@ public class Utils {
         config.setUsername(user);
         config.setPassword(password);
         HikariDataSource dataSource = new HikariDataSource(config);
-        setDataSource(dataSource);
+        setDataSourceFromORMCreation(dataSource);
         return dataSource;
+    }
+
+    private static void setDataSourceFromORMCreation(HikariDataSource dataSource) {
+        Utils.dataSource = dataSource;
     }
 
     /**
@@ -63,10 +67,6 @@ public class Utils {
             log.error("Need to initialize ORManager first to set the data source.");
             throw new RuntimeException(e);
         }
-    }
-
-    private static void setDataSource(HikariDataSource dataSource) {
-        Utils.dataSource = dataSource;
     }
 
     public static ORManager withDataSource(DataSource dataSource) {
