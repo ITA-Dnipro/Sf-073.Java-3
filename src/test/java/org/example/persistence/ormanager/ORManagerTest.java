@@ -48,10 +48,10 @@ class ORManagerTest {
         ormManager = Utils.withPropertiesFrom(DATABASE_PATH);
         conn = ormManager.getConnection();
         log.atDebug().log("is the connection valid: {}", conn.isValid(1000));
-//        conn.setAutoCommit(false);
+        conn.setAutoCommit(false);
         conn.prepareStatement(STUDENTS_TABLE).execute();
 
-        source = new Source("jdbc:h2:mem:test;DB_CLOSE_DELAY=-1", "", "");
+        source = new Source("jdbc:h2:mem:test", "", "");
         student = new Student("Bob");
     }
 
