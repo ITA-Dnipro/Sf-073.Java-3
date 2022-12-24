@@ -46,7 +46,7 @@ class ORManagerTest {
     @BeforeAll
     static void setUp() throws SQLException {
         ormManager = Utils.withPropertiesFrom(DATABASE_PATH);
-        conn = ormManager.getConnection();
+        conn = Utils.getConnection();
         log.atDebug().log("is the connection valid: {}", conn.isValid(1000));
         conn.prepareStatement(STUDENTS_TABLE).execute();
 

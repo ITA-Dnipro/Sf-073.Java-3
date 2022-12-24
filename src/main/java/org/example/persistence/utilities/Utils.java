@@ -2,6 +2,7 @@ package org.example.persistence.utilities;
 
 import com.zaxxer.hikari.HikariConfig;
 import com.zaxxer.hikari.HikariDataSource;
+import lombok.extern.slf4j.Slf4j;
 import org.example.persistence.ormanager.ORManager;
 import org.example.persistence.ormanager.ORManagerImpl;
 
@@ -10,11 +11,13 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.nio.file.Path;
 import java.sql.Connection;
-import java.util.Map;
+import java.sql.SQLException;
 import java.util.Properties;
 
+@Slf4j
 public class Utils {
-    private Connection connection;
+    private static HikariDataSource dataSource;
+
     private Utils() {
     }
 
@@ -26,7 +29,7 @@ public class Utils {
         String jdbcUser = properties.getProperty("jdbc-username", "");
         String jdbcPass = properties.getProperty("jdbc-pass", "");
 
-        return new ORManagerImpl(createDataSource(jdbcUrl, jdbcUser, jdbcPass, Map.of()));
+        return new ORManagerImpl(createDataSource(jdbcUrl, jdbcUser, jdbcPass));
     }
 
     public static Properties readProperties(Path file) {
@@ -39,19 +42,31 @@ public class Utils {
         }
     }
 
-    static DataSource createDataSource(String url, String user, String password, Map<String, String> props) {
+    static DataSource createDataSource(String url, String user, String password) {
         HikariConfig config = new HikariConfig();
         config.setJdbcUrl(url);
         config.setUsername(user);
         config.setPassword(password);
+        HikariDataSource dataSource = new HikariDataSource(config);
+        setDataSource(dataSource);
+        return dataSource;
+    }
 
-//        HikariDataSource dataSource = new HikariDataSource();
-//        dataSource.setJdbcUrl(url);
-//        dataSource.setUsername(user);
-//        dataSource.setPassword(password);
-//        return dataSource;
+    /**
+     * @return connection from the datasource, provided by the created ORM Manager.
+     * @throws SQLException
+     */
+    public static Connection getConnection() throws SQLException {
+        try {
+            return dataSource.getConnection();
+        } catch (NullPointerException e) {
+            log.error("Need to initialize ORManager first to set the data source.");
+            throw new RuntimeException(e);
+        }
+    }
 
-        return new HikariDataSource(config);
+    private static void setDataSource(HikariDataSource dataSource) {
+        Utils.dataSource = dataSource;
     }
 
     public static ORManager withDataSource(DataSource dataSource) {

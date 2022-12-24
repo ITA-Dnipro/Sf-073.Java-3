@@ -2,8 +2,6 @@ package org.example.persistence.ormanager;
 
 import javax.sql.DataSource;
 import java.io.Serializable;
-import java.sql.Connection;
-import java.sql.SQLException;
 import java.util.List;
 import java.util.Optional;
 
@@ -48,19 +46,6 @@ public class ORManagerImpl implements ORManager {
     @Override
     public boolean delete(Object o) {
         return false;
-    }
-
-    @Override
-    public Connection getConnection() {
-        try {
-            return getDataSource().getConnection();
-        } catch (SQLException e) {
-            throw new RuntimeException(e);
-        }
-    }
-
-    private DataSource getDataSource() {
-        return dataSource;
     }
 
 }

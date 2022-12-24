@@ -1,7 +1,6 @@
 package org.example.persistence.ormanager;
 
 import java.io.Serializable;
-import java.sql.Connection;
 import java.util.List;
 import java.util.Optional;
 
@@ -28,5 +27,4 @@ public interface ORManager {
     // return true if successfully deleted
     boolean delete(Object o);
 
-    Connection getConnection();
 }
