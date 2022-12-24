@@ -22,7 +22,7 @@ public class Utils {
         Path path = Path.of(filename);
         Properties properties = readProperties(path);
 
-        String jdbcUrl = properties.getProperty("jdbc-url");
+        String jdbcUrl = properties.getProperty("jdbc-mem-url");
         String jdbcUser = properties.getProperty("jdbc-username", "");
         String jdbcPass = properties.getProperty("jdbc-pass", "");
 

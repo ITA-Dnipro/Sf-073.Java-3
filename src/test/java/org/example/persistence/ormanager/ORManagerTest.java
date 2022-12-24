@@ -48,7 +48,6 @@ class ORManagerTest {
         ormManager = Utils.withPropertiesFrom(DATABASE_PATH);
         conn = ormManager.getConnection();
         log.atDebug().log("is the connection valid: {}", conn.isValid(1000));
-        conn.setAutoCommit(false);
         conn.prepareStatement(STUDENTS_TABLE).execute();
 
         source = new Source("jdbc:h2:mem:test", "", "");
