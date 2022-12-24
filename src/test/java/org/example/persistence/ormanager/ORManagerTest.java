@@ -66,7 +66,7 @@ class ORManagerTest {
 
     @Test
     @DisplayName("try saving to database")
-    void save() throws SQLException {
+    void SaveToDBAndSeeResultWithOutputToConsole() throws SQLException {
         stmt = conn.prepareStatement(SQL_ADD_ONE);
         Student st2 = new Student("Ani");
         Student st3 = new Student("Dale");
@@ -98,7 +98,7 @@ class ORManagerTest {
     }
 
     @Test
-    void CheckIfIdIsSet() {
+    void CheckIfIdIsNull() {
         assertThat(student.getId()).as("User \"%s\" has no ID set yet", student.getFirstName()).isNull();
     }
 
