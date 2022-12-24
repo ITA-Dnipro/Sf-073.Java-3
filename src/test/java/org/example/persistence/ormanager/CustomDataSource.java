@@ -6,7 +6,7 @@ import com.zaxxer.hikari.HikariDataSource;
 import java.sql.Connection;
 import java.sql.SQLException;
 
-public class DataSource {
+public class CustomDataSource {
     private static HikariConfig config = new HikariConfig();
     private static HikariDataSource ds;
 
@@ -20,7 +20,7 @@ public class DataSource {
         ds = new HikariDataSource(config);
     }
 
-    private DataSource() {
+    private CustomDataSource() {
     }
 
     public static Connection getConnection() throws SQLException {
